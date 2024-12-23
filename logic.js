@@ -24,15 +24,35 @@ const btnA = [
 // Click event handler
 function btnClick(e) {
     //console.log(e.target.parent.name); // button name
-    const btn = e.target.parent;
+    const mc = e.target.parent;
     // extract iname and inum from instance name
-    const iname = btn.name.slice(0, -1);
-    const inum = btn.name.slice(-1);
+    const iname = mc.name.slice(0, -1);
+    const inum = mc.name.slice(-1);
 
-    // 
+    // find section of the body
+    for (let i=0;i<btnA.length;i++) {
+        let s = btnA[i];
+        if (s.sn == iname) {
+            // get current value of btn "old num" using index which matches btn instance name number
+            const onum = s.vA[inum];
+            // update data for this button
+            const nnum = upBtn(onum);
+            // update
+            s.vA[inum] = nnum;
+            mc.gotoAndStop(nnum+1);
+            // calc new section average
+            let sectionText = getAvg(vA);
+            // update total
+
+        }
+    }
 
 }
-
+function upBtn(num) {
+    num ++;
+    if (num > 3) num = 0;
+    return num;
+}
 // averager
 function getAvg(myA) {
     let c = 0;

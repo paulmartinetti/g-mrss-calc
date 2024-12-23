@@ -35,17 +35,18 @@ function btnClick(e) {
         if (s.sn == iname) {
             // get current value of btn "old num" using index which matches btn instance name number
             const onum = s.vA[inum];
-            // update data for this button
+            // increment value
             const nnum = upBtn(onum);
-            // update
+            // update data
             s.vA[inum] = nnum;
+            // update gui
             mc.gotoAndStop(nnum+1);
-            // calc new section average
-            let sectionText = getAvg(vA);
-            // update total
-
+            // 
+            break;
         }
     }
+    // update averages and total -- to write
+
 
 }
 function upBtn(num) {
@@ -82,7 +83,7 @@ btnA.forEach(s => {
     // Add click listeners to each button
     for (let i = 1; i <= num; i++) {
         // Get button dynamically
-        const button = this.[section+i];
+        const button = this[section+i];
 
         // Ensure the button exists
         if (button) {

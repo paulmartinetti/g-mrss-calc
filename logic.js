@@ -1,6 +1,4 @@
 this.stop();
-//this.totalT.text = "Hello, world!";
-//window.totalT = this.totalT;
 
 // Define the sections and buttons
 const btnA = [
@@ -24,93 +22,81 @@ const btnA = [
 ];
 
 // Click event handler
-function btnClick(e) {
-    //console.log(e.target.parent.name); // button name
+const btnClick = (e) => {
     const mc = e.target.parent;
-    // extract iname and inum from instance name
     const iname = mc.name.slice(0, -1);
     const inum = mc.name.slice(-1);
+    let s;
 
-    // find section of the body
-    for (let i = 0; i < btnA.length; i++) {
-        let s = btnA[i];
-        if (s.sn == iname) {
-            // get current value of btn "old num" using index which matches btn instance name number
+    for (let i = 0; i < 17; i++) {
+        s = btnA[i];
+        if (s.sn === iname) {
             const onum = s.vA[inum];
-            // increment value
             const nnum = upBtn(onum);
-            // update data
             s.vA[inum] = nnum;
-            // update gui
             mc.gotoAndStop(nnum);
-            // 
             break;
         }
     }
-    // update averages and total -- to write
     updateGui();
-}
-function updateGui() {
+};
+
+const updateGui = () => {
     let ave = 0;
     let tot = 0;
     let txt = "";
 
-    btnA.forEach(s => {
-        // get average of each section
+    for (let i = 0; i < 17; i++) {
+        const s = btnA[i];
         ave += getAvg(s.vA);
-        // add to total
         tot += ave;
-        // create total string
-        txt += s.sn + ": " + ave + "\n";
-    });
-    // total
+        txt += `${s.sn}: ${ave}\n`;
+    }
+
     txt += "Total: " + tot;
     console.log(txt);
-    this.totalT.text = txt;
-}
 
-function upBtn(num) {
+    // Update the text box
+    this.totalT.text = txt;
+};
+
+const upBtn = (num) => {
     num++;
     if (num > 3) num = 0;
     return num;
-}
-// averager
-function getAvg(myA) {
+};
+
+const getAvg = (myA) => {
     let c = 0;
-    myA.forEach(val => {
-        c += val;
-    });
-    const av = c / (myA.length - 1);
-    if (av > 2.50) return 3;
-    if (av > 1.50) return 2;
+    for (let i = 0; i < myA.length; i++) {
+        c += myA[i];
+    }
+    const av = c / (myA.length || 1);
+    if (av > 2.5) return 3;
+    if (av > 1.5) return 2;
     if (av > 0) return 1;
     return 0;
-}
-// Setup buttons in each section
-const setUp = () => {
-    for (let i = 0; i++; i < btnA.length) {
-        let s = btnA[i];
-        // Get the section movie clip dynamically
-        const section = s.sn;
+};
 
-        // Number of buttons in the section
+// Setup buttons in each section
+function setUp() {
+    for (let i = 0; i < 17; i++) {
+        const s = btnA[i];
+        const section = s.sn;
         const num = s.btns;
 
-        // Add click listeners to each button
-        for (let i = 1; i <= num; i++) {
-            // Get button dynamically
-            const button = this.main[section + i];
+        for (let j = 1; j <= num; j++) {
+            const button = this.main[`${section}${j}`];
 
-            // Ensure the button exists
             if (button) {
-                // Add click listener
                 button.addEventListener("click", btnClick);
-
-                // Add placeholder to value array
                 s.vA.push(0);
             } else {
-                console.warn(`Button '${s.sn}' not found in section.`);
+                console.warn(`Button '${section}${j}' not found.`);
             }
         }
     }
 }
+
+// Call setup
+setUp.call(this);

@@ -54,7 +54,7 @@ const updateGui = () => {
         txt += `${s.sn}: ${ave}\n`;
     }
 
-    txt += "Total: " + tot;
+    txt += `Total: ${tot}`;
 
     // Update the text box
     this.totalT.text = txt;
@@ -104,8 +104,47 @@ function setUp() {
             }
         }
     }
-    console.log(btnA[4].vA);
 }
 
 // Call setup
 setUp.call(this);
+// Reference to the MovieClip
+const myClip = this.main;
+
+// Set the mouse pointer to "pointer" when hovering over the MovieClip
+myClip.cursor = "grab";
+
+// Variables to track dragging
+let offsetX, offsetY;
+
+// Add event listeners for mouse interactions
+myClip.on("mousedown", function (evt) {
+    // Calculate offset between mouse position and MovieClip position
+    offsetX = evt.stageX - myClip.x;
+    offsetY = evt.stageY - myClip.y;
+
+    // Change the cursor to "grab" when dragging starts
+    myClip.cursor = "grabbing";
+
+    // Add a mousemove event to enable dragging
+    myClip.on("pressmove", function (evt) {
+        // Update the MovieClip position to follow the mouse
+        myClip.x = evt.stageX - offsetX;
+        myClip.y = evt.stageY - offsetY;
+
+        // Update the stage to render the new position
+        this.stage.update();
+    });
+});
+
+// Remove the pressmove listener when the mouse is released
+myClip.on("pressup", function (evt) {
+    // Reset the cursor back to "pointer"
+    myClip.cursor = "grab";
+
+    // Remove the pressmove event
+    myClip.off("pressmove");
+});
+
+// Update the stage for the initial setup
+this.stage.update();

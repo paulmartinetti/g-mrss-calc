@@ -1,7 +1,7 @@
 this.stop();
 
 // Define the sections and buttons
-this.btnA = [
+const btnA = [
     { "sn": "rightfingers", "btns": 4, "vA": [0] },
     { "sn": "leftfingers", "btns": 4, "vA": [0] },
     { "sn": "righthand", "btns": 4, "vA": [0] },
@@ -24,11 +24,30 @@ this.btnA = [
 // Click event handler
 function btnClick(e) {
     //console.log(e.target.parent.name); // button name
+    const btn = e.target.parent;
+    // extract iname and inum from instance name
+    const iname = btn.name.slice(0, -1);
+    const inum = btn.name.slice(-1);
+
+    // 
 
 }
 
+// averager
+function getAvg(myA) {
+    let c = 0;
+    myA.forEach (val => {
+        c += val;
+    });
+    const av = c/(myA.length-1);
+    if (av > 2.50) return 3;
+    if (av > 1.50) return 2;
+    if (av > 0) return 1;
+    return 0;
+}
+
 // Setup buttons in each section
-this.btnA.forEach(s => {
+btnA.forEach(s => {
     // Get the section movie clip dynamically
     const section = s.sn;
 

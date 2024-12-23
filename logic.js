@@ -1,4 +1,6 @@
 this.stop();
+//this.totalT.text = "Hello, world!";
+//window.totalT = this.totalT;
 
 // Define the sections and buttons
 const btnA = [
@@ -30,7 +32,7 @@ function btnClick(e) {
     const inum = mc.name.slice(-1);
 
     // find section of the body
-    for (let i=0;i<btnA.length;i++) {
+    for (let i = 0; i < btnA.length; i++) {
         let s = btnA[i];
         if (s.sn == iname) {
             // get current value of btn "old num" using index which matches btn instance name number
@@ -40,60 +42,75 @@ function btnClick(e) {
             // update data
             s.vA[inum] = nnum;
             // update gui
-            mc.gotoAndStop(nnum+1);
+            mc.gotoAndStop(nnum);
             // 
             break;
         }
     }
     // update averages and total -- to write
-
-
+    updateGui();
 }
+function updateGui() {
+    let ave = 0;
+    let tot = 0;
+    let txt = "";
+
+    btnA.forEach(s => {
+        // get average of each section
+        ave += getAvg(s.vA);
+        // add to total
+        tot += ave;
+        // create total string
+        txt += s.sn + ": " + ave + "\n";
+    });
+    // total
+    txt += "Total: " + tot;
+    console.log(txt);
+    this.totalT.text = txt;
+}
+
 function upBtn(num) {
-    num ++;
+    num++;
     if (num > 3) num = 0;
     return num;
 }
 // averager
 function getAvg(myA) {
     let c = 0;
-    myA.forEach (val => {
+    myA.forEach(val => {
         c += val;
     });
-    const av = c/(myA.length-1);
+    const av = c / (myA.length - 1);
     if (av > 2.50) return 3;
     if (av > 1.50) return 2;
     if (av > 0) return 1;
     return 0;
 }
-
 // Setup buttons in each section
-btnA.forEach(s => {
-    // Get the section movie clip dynamically
-    const section = s.sn;
+const setUp = () => {
+    for (let i = 0; i++; i < btnA.length) {
+        let s = btnA[i];
+        // Get the section movie clip dynamically
+        const section = s.sn;
 
-    if (!section) {
-        console.error(`Section '${s.sn}' not found.`);
-        return;
-    }
+        // Number of buttons in the section
+        const num = s.btns;
 
-    // Number of buttons in the section
-    const num = s.btns;
+        // Add click listeners to each button
+        for (let i = 1; i <= num; i++) {
+            // Get button dynamically
+            const button = this.main[section + i];
 
-    // Add click listeners to each button
-    for (let i = 1; i <= num; i++) {
-        // Get button dynamically
-        const button = this[section+i];
+            // Ensure the button exists
+            if (button) {
+                // Add click listener
+                button.addEventListener("click", btnClick);
 
-        // Ensure the button exists
-        if (button) {
-            // Add click listener
-            button.addEventListener("click", btnClick);
-
-            // Add placeholder to value array
-            s.vA.push(0);
-        } else {
-            console.warn(`Button '${s.sn}' not found in section.`);
+                // Add placeholder to value array
+                s.vA.push(0);
+            } else {
+                console.warn(`Button '${s.sn}' not found in section.`);
+            }
         }
     }
-});
+}
